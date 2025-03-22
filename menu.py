@@ -45,7 +45,7 @@ image_url = "https://raw.githubusercontent.com/mubeenkab123/Hotel-menu/refs/head
 
 st.image(image_url, width=200)  # Display the image in Streamlit
    
-st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
+st.title("🍽️ Menu")
 st.write("Select items and place your order!")
 
 # Define category emojis
