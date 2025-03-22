@@ -7,12 +7,31 @@ from datetime import datetime
 import json
 
 
+# Define JSON file path
+json_path = "/mnt/data/restaurento-1127906dfe27.json"
+
+# Check if the file exists
+if not os.path.exists(json_path):
+    st.error("❌ Service account JSON file not found! Please upload it.")
+else:
+    st.success("✅ Service account JSON file found.")
+
+# Load JSON file properly
+try:
+    with open(json_path, "r") as file:
+        creds_dict = json.load(file)  # This should now be properly defined
+    st.success("✅ JSON file loaded successfully.")
+except Exception as e:
+    st.error(f"⚠️ Error reading JSON file: {e}")
+
 # Authenticate with Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-client = gspread.authorize(creds)
-
-st.success("✅ Google Sheets authentication successful!")
+try:
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    client = gspread.authorize(creds)
+    st.success("✅ Google Sheets authentication successful!")
+except Exception as e:
+    st.error(f"⚠️ Authentication Error: {e}")
 
 
 # Open Google Sheets (menudata file → menu_data sheet)
