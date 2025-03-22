@@ -46,8 +46,8 @@ image_path = "download.jpg"  # Update with the correct filename if needed
 image_path = os.path.join(os.getcwd(), "download.jpg")
 st.image(image_path, width=200)
 
-else:
-    st.error("Error: Logo image not found. Please check the file path.")
+    else:
+        st.error("Error: Logo image not found. Please check the file path.")
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
 st.write("Select items and place your order!")
 
