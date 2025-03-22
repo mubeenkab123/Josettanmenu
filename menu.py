@@ -42,33 +42,28 @@ for _, row in df_menu.iterrows():
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
 st.write("Select items and place your order!")
 
+# Define category emojis
 category_emojis = {
-    "Starters": "🍤",
-    "Main Course": "🍛",
-    "Desserts": "🍰",
-    "Beverages": "🥤",
-    "Biryani": "🍚",
+    "Biryani": "🍛",
+    "Fried Rice": "🍚",
+    "Chinese": "🥢",
     "Pizza": "🍕",
     "Burgers": "🍔",
-    "Sandwiches": "🥪",
+    "Desserts": "🍰",
+    "Beverages": "🥤",
     "Seafood": "🦞",
     "Salads": "🥗",
     "Soups": "🍜",
     "Pasta": "🍝",
-    "Chinese": "🍜",
+    "Main Course": "🍽️",
 }
-# Display Menu
-selected_items = {}
+
+# Display Menu Categories with Emojis
 for category, items in menu.items():
-    with st.expander(f"{category}"):
+    emoji = category_emojis.get(category, "🍽️")  # Default emoji if category not found
+    with st.expander(f"{emoji} **{category}**"):
         for item, price in items.items():
-            # Show price correctly in UI
-            st.write(f"{item} - ₹ {price}" if isinstance(price, (int, float)) else f"{item} - Price Not Available")
-            
-            quantity = st.number_input(
-                f"{item} (₹ {price})" if isinstance(price, (int, float)) else f"{item} (Price Not Available)", 
-                min_value=0, max_value=10, step=1, key=f"{category}_{item}"
-            )
+            quantity = st.number_input(f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}")
             if quantity > 0:
                 selected_items[item] = quantity
 
