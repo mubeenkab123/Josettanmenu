@@ -15,12 +15,7 @@ menu_sheet = client.open("menudata").worksheet("menu_data")
 menu_data = menu_sheet.get_all_records()
 df_menu = pd.DataFrame(menu_data)
 
-# Debugging: Show column names and first rows
-st.write("🔍 Column Names:", df_menu.columns.tolist())
-st.write("🔍 First few rows of menu data:", df_menu.head())
 
-# Ensure column names are clean (remove spaces)
-df_menu.columns = df_menu.columns.str.strip()
 
 # Convert DataFrame to Menu Dictionary
 menu = {}
