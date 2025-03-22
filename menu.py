@@ -33,57 +33,43 @@ for _, row in df_menu.iterrows():
             menu[category] = {}
         if available.lower() == "yes":
             menu[category][item] = price  
-# Custom CSS for Round - The Global Diner Styling
-st.markdown("""
+# Streamlit UI Custom Styling
+st.markdown(
+    """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Merriweather&display=swap');
-    
-    body {
-        background-color: #FFFFFF;
-        color: #000000;
-        font-family: 'Merriweather', serif;
-    }
-    .header {
-        background-color: #002060;
-        padding: 15px;
-        text-align: center;
-        color: #FFD700;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 30px;
-        border-radius: 10px;
-    }
-    .menu-section {
-        margin: 20px 0;
-        padding: 10px;
-        border-left: 5px solid #002060;
-    }
-    .menu-item {
-        border-bottom: 1px solid #DDD;
-        padding: 10px 0;
-        font-size: 18px;
-    }
-    .menu-item h3 {
-        color: #002060;
-    }
-    .menu-item p {
-        color: #555;
-    }
-    .order-button {
-        background-color: #FFD700;
-        color: #002060;
-        padding: 10px 15px;
-        border-radius: 5px;
-        font-size: 18px;
-        cursor: pointer;
-    }
+        /* Set background color */
+        .stApp {
+            background-color: #1A0E1E; /* Dark Purple from logo */
+            color: white;
+        }
+        /* Style buttons */
+        div.stButton > button {
+            background-color: #FFC107; /* Yellow from logo */
+            color: black;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: bold;
+        }
+        /* Style inputs */
+        input[type="text"] {
+            background-color: #333;
+            color: white;
+            border: 1px solid #FFC107;
+        }
+        /* Style expanders */
+        .st-expander {
+            background-color: #2D1B33;
+        }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
-# Header
-st.markdown('<div class="header">Round - The Global Diner Thrissur</div>', unsafe_allow_html=True)
+# Display Logo
+st.image("https://theround.in/assets/images/logo.png", width=250)  # Using the online logo
 
-# Menu Display
-st.write("## Explore Our Menu")
+st.write("### Welcome to Round - The Global Diner 🍽️")
+st.write("Select your favorite dishes and place an order!")
 selected_items = {}
 # Category Emojis (Optional)
 category_emojis = {
