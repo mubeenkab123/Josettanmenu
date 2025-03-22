@@ -80,6 +80,3 @@ if st.button("✅ Place Order"):
     else:
         st.warning("⚠️ Please select at least one item to order.")
 
-# Debugging: Show fetched menu data
-if st.checkbox("🔍 Show Raw Menu Data"):
-    st.write(df_menu)
