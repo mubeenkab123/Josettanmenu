@@ -39,6 +39,8 @@ for _, row in df_menu.iterrows():
             menu[category][item] = price  
 
 # Streamlit UI
+# Display the logo at the top
+st.image("download.jpg", width=200)  # Adjust width as needed
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
 st.write("Select items and place your order!")
 
@@ -67,7 +69,11 @@ for category, items in menu.items():
             if quantity > 0:
                 selected_items[item] = quantity
 
+# Add Name Input Field
+name = st.text_input("Enter your name:")
 
+# Ensure the name field is visible
+st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_allow_html=True)
 
 # Order Processing
 if st.button("✅ Place Order"):
