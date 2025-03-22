@@ -33,7 +33,58 @@ for _, row in df_menu.iterrows():
             menu[category] = {}
         if available.lower() == "yes":
             menu[category][item] = price  
+# Custom CSS for Round - The Global Diner Styling
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Merriweather&display=swap');
+    
+    body {
+        background-color: #FFFFFF;
+        color: #000000;
+        font-family: 'Merriweather', serif;
+    }
+    .header {
+        background-color: #002060;
+        padding: 15px;
+        text-align: center;
+        color: #FFD700;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 30px;
+        border-radius: 10px;
+    }
+    .menu-section {
+        margin: 20px 0;
+        padding: 10px;
+        border-left: 5px solid #002060;
+    }
+    .menu-item {
+        border-bottom: 1px solid #DDD;
+        padding: 10px 0;
+        font-size: 18px;
+    }
+    .menu-item h3 {
+        color: #002060;
+    }
+    .menu-item p {
+        color: #555;
+    }
+    .order-button {
+        background-color: #FFD700;
+        color: #002060;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    </style>
+    ", unsafe_allow_html=True)
 
+# Header
+st.markdown('<div class="header">Round - The Global Diner Thrissur</div>', unsafe_allow_html=True)
+
+# Menu Display
+st.write("## Explore Our Menu")
+selected_items = {}
 # Category Emojis (Optional)
 category_emojis = {
     "Biryani": "🥘",
