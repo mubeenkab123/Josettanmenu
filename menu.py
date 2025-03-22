@@ -277,7 +277,7 @@ menu = {
 }
 
 # Streamlit UI
-st.title("🍽️ CookDoor Menu")
+st.title("🍽️ Hotel Menu")
 st.write("Select items and place your order!")
 
 
