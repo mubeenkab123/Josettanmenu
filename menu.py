@@ -39,9 +39,14 @@ for _, row in df_menu.iterrows():
             menu[category][item] = price  
 
 # Streamlit UI
-# Display the logo at the top
-st.image("https://your-logo-url.com/logo.jpg", width=200)
+# Define the correct image path
+image_path = "download.jpg"  # Update with the correct filename if needed
 
+# Check if the image exists before displaying
+if os.path.exists(image_path):
+    st.image(image_path, width=200)
+else:
+    st.error("Error: Logo image not found. Please check the file path.")
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
 st.write("Select items and place your order!")
 
