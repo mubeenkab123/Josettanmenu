@@ -41,10 +41,8 @@ for _, row in df_menu.iterrows():
 # Streamlit UI
 # Define the correct image path
 image_path = "download.jpg"  # Update with the correct filename if needed
-
-# Check if the image exists before displaying
-image_path = os.path.join(os.getcwd(), "download.jpg")
-st.image(image_path, width=200)
+st.write("Current Directory:", os.getcwd())
+st.write("Files in Directory:", os.listdir(os.getcwd()))
 
    
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
