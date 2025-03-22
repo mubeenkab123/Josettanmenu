@@ -76,7 +76,7 @@ st.markdown("""
         cursor: pointer;
     }
     </style>
-    ", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 # Header
 st.markdown('<div class="header">Round - The Global Diner Thrissur</div>', unsafe_allow_html=True)
