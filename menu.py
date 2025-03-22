@@ -70,14 +70,23 @@ if st.button("✅ Place Order"):
     if not name:
         st.warning("⚠️ Please enter your name.")
     elif selected_items:
-        total_price = sum(menu[cat][item] * qty for cat in menu for item, qty in selected_items.items() if item in menu[cat])
-        order_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        order_str = ", ".join([f"{item}({qty})" for item, qty in selected_items.items()])
-        
-        # **Save order to Google Sheets**
-        db = client.open("RestaurantOrders").sheet1
-        db.append_row([name, order_time, order_str, total_price])
-        
-        st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n💰 Total: ₹ {total_price}")
+        try:
+            total_price = sum(menu[cat][item] * qty for cat in menu for item, qty in selected_items.items() if item in menu[cat])
+            order_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            order_str = ", ".join([f"{item}({qty})" for item, qty in selected_items.items()])
+            
+            # Open the correct Google Sheet
+            try:
+                orders_sheet = client.open("RestaurantOrders").sheet1  # Opens the first sheet
+            except gspread.exceptions.SpreadsheetNotFound:
+                st.error("⚠️ 'RestaurantOrders' file not found! Make sure the file name is correct.")
+                st.stop()
+
+            # Append new order data
+            orders_sheet.append_row([name, order_time, order_str, total_price])
+
+            st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n💰 Total: ₹ {total_price}")
+        except gspread.exceptions.APIError as e:
+            st.error(f"⚠️ Google Sheets API Error: {e}")
     else:
         st.warning("⚠️ Please select at least one item to order.")
