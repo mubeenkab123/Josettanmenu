@@ -64,6 +64,8 @@ category_emojis = {
     "Main Course": "🍽️",
 }
 
+selected_items = {}  # Define before using it
+
 # Display Menu Categories with Emojis
 for category, items in menu.items():
     emoji = category_emojis.get(category, "🍽️")  # Default emoji if category not found
@@ -71,7 +73,7 @@ for category, items in menu.items():
         for item, price in items.items():
             quantity = st.number_input(f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}")
             if quantity > 0:
-                selected_items[item] = quantity
+                selected_items[item] = quantity  # Now it will work without error
 
 # Add Name Input Field
 name = st.text_input("Enter your name:")
