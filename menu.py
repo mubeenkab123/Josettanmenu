@@ -4,12 +4,21 @@ import pandas as pd
 import os
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
+import json
 
-# Google Sheets Authentication
+
+# Load JSON file properly
+json_path = "/mnt/data/restaurento-1127906dfe27.json"  # Update with the correct path
+with open(json_path, "r") as file:
+    creds_dict = json.load(file)
+
+# Authenticate with Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds_dict = dict(st.secrets["gcp_service_account"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
+
+st.success("✅ Google Sheets authentication successful!")
+
 
 # Open Google Sheets (menudata file → menu_data sheet)
 menu_sheet = client.open("menudata").worksheet("menu_data")    
