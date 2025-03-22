@@ -16,125 +16,82 @@ menu_sheet = client.open("menudata").worksheet("menu_data")
 menu_data = menu_sheet.get_all_records()
 df_menu = pd.DataFrame(menu_data)
 
+
+
 # Convert DataFrame to Menu Dictionary
 menu = {}
 for _, row in df_menu.iterrows():
     category = row.get("Category", "").strip()
     item = row.get("Item Name", "").strip()
-    price = row.get("Price (₹)", 0)
-    image_url = row.get("Image URL", "").strip()  # New: Add image URLs
-    available = row.get("Available", "").strip().lower()
+    price = row.get("Price (₹)", 0)  # Default to 0 if missing
 
+    # Convert price to a proper format
     if isinstance(price, str):  
-        price = price.strip().replace("₹", "").replace(",", "")  
+        price = price.strip()  
+        price = price.replace("₹", "").replace(",", "")  # Remove ₹ symbols and commas
         price = float(price) if price.isnumeric() else "Not Available"
 
-    if category and item and available in ["yes", "y"]:  
+    available = row.get("Available", "").strip().lower()
+
+    if category and item:  # Ensure valid category and item
         if category not in menu:
-            menu[category] = []
-        menu[category].append({"name": item, "price": price, "image": image_url})
+            menu[category] = {}
+        if available in ["yes", "y"]:  # Allow different yes formats
+            menu[category][item] = price  
 
 # Streamlit UI
-st.set_page_config(page_title="Hotel Menu", layout="wide")
+# Define the correct image path
+image_url = "https://raw.githubusercontent.com/mubeenkab123/Hotel-menu/refs/heads/main/download.jpg"
 
-# Header Styling
-st.markdown("""
-    <style>
-        .header-container {
-            text-align: center;
-            background-color: #1A012D; /* Match logo background */
-            padding: 20px;
-            border-radius: 10px;
-            width: 100%;
-        }
-        .logo {
-            display: block;
-            margin: auto;
-            max-width: 150px;
-            height: auto;
-        }
-        .category-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .category-btn {
-            padding: 12px;
-            margin: 5px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .category-btn:hover {
-            background: #ddd;
-        }
-        .floating-cart {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: #ff4b4b;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 18px;
-        }
-    </style>
-""", unsafe_allow_html=True)
+st.image(image_url, width=200)  # Display the image in Streamlit
+   
+st.title("🍽️ Menu")
+st.write("Select items and place your order!")
 
-# Display Logo
-st.markdown('<div class="header-container">', unsafe_allow_html=True)
-st.image("https://raw.githubusercontent.com/mubeenkab123/Hotel-menu/main/download.jpg", width=180)
-st.markdown("</div>", unsafe_allow_html=True)
+# Define category emojis
+category_emojis = {
+    "Biryani": "🍛",
+    "Fried Rice": "🍚",
+    "Chinese": "🥢",
+    "Pizza": "🍕",
+    "Burgers": "🍔",
+    "Desserts": "🍰",
+    "Beverages": "🥤",
+    "Seafood": "🦞",
+    "Salads": "🥗",
+    "Soups": "🍜",
+    "Pasta": "🍝",
+    "Main Course": "🍽️",
+}
 
-# Page Title
-st.markdown("<h1 style='text-align: center;'>Hotel Menu (Dynamic from Google Sheets)</h1>", unsafe_allow_html=True)
-
-# Display Categories as Buttons
-st.markdown("<div class='category-container'>", unsafe_allow_html=True)
-for category in menu.keys():
-    if st.button(category):
-        selected_category = category
-st.markdown("</div>", unsafe_allow_html=True)
-
-# Display Menu Items
-selected_items = {}
-if 'selected_category' in locals():
-    st.subheader(f"📌 {selected_category}")
-
-    for item in menu[selected_category]:
-        col1, col2 = st.columns([1, 3])
-        with col1:
-            if item["image"]:
-                st.image(item["image"], width=80)
-        with col2:
-            quantity = st.number_input(f"{item['name']} - ₹{item['price']}", min_value=0, max_value=10, step=1, key=item["name"])
+# Display Menu Categories with Emojis
+for category, items in menu.items():
+    emoji = category_emojis.get(category, "🍽️")  # Default emoji if category not found
+    with st.expander(f"{emoji} **{category}**"):
+        for item, price in items.items():
+            quantity = st.number_input(f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}")
             if quantity > 0:
-                selected_items[item["name"]] = {"quantity": quantity, "price": item["price"]}
+                selected_items[item] = quantity
 
 # Add Name Input Field
 name = st.text_input("Enter your name:")
-st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_allow_html=True)
 
-# Floating Cart Summary
-if selected_items:
-    total_price = sum(item["price"] * item["quantity"] for item in selected_items.values())
-    st.markdown(f"<div class='floating-cart'>🛒 {len(selected_items)} Items - ₹{total_price}</div>", unsafe_allow_html=True)
+# Ensure the name field is visible
+st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_allow_html=True)
 
 # Order Processing
 if st.button("✅ Place Order"):
     if not name:
         st.warning("⚠️ Please enter your name.")
     elif selected_items:
+        total_price = sum(menu[cat][item] * qty for cat in menu for item, qty in selected_items.items() if item in menu[cat])
         order_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        order_str = ", ".join([f"{item}({details['quantity']})" for item, details in selected_items.items()])
+        order_str = ", ".join([f"{item}({qty})" for item, qty in selected_items.items()])
         
         # Save order to Google Sheets
         db = client.open("RestaurantOrders").sheet1
         db.append_row([name, order_time, order_str, total_price])
         
-        st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n💰 Total: ₹{total_price}")
+        st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n💰 Total: ₹ {total_price}")
     else:
         st.warning("⚠️ Please select at least one item to order.")
