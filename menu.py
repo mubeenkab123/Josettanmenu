@@ -10,29 +10,25 @@ creds_dict = dict(st.secrets["gcp_service_account"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
-# Open Google Sheets (menudata file → menu_data sheet)
-menu_sheet = client.open("menudata").worksheet("menu_data")    
+# Open Google Sheets
+menu_sheet = client.open_by_key("1ILbYNRM-UWth_wm_X48TkzUEyvDT92bcCggVI6COUKg").worksheet("menu_data")    
 menu_data = menu_sheet.get_all_records()
 df_menu = pd.DataFrame(menu_data)
-
-
-
-# Ensure column names are clean (remove spaces, avoid KeyErrors)
-df_menu.columns = df_menu.columns.str.strip()
 
 # Convert DataFrame to Menu Dictionary
 menu = {}
 for _, row in df_menu.iterrows():
-    category = row.get("Category", "").strip()
-    item = row.get("Item Name", "").strip()
-    price = row.get("Price", 0)  # Default price to 0 if missing
-    available = row.get("Available", "No").strip()
+    category = row["Category"]
+    item = row["Item Name"]
+    price = row["Price"]
+    available = row["Available"]
 
-    if category and item:  # Ensure valid category and item
-        if category not in menu:
-            menu[category] = {}
-        if available.lower() == "yes":
-            menu[category][item] = price  
+    if category not in menu:
+        menu[category] = {}
+
+    if available.lower() == "yes":
+        menu[category][item] = price  
+
 # Streamlit UI Custom Styling
 st.markdown(
     """
@@ -44,21 +40,25 @@ st.markdown(
         }
         /* Style buttons */
         div.stButton > button {
-            background-color: #FFC107; /* Yellow from logo */
+            background-color: #FFC107; /* Yellow */
             color: black;
             border-radius: 8px;
             padding: 10px;
             font-weight: bold;
         }
-        /* Style inputs */
+        /* Style text input */
         input[type="text"] {
             background-color: #333;
             color: white;
-            border: 1px solid #FFC107;
+            border: 2px solid #FFC107;
+            padding: 8px;
+            font-size: 16px;
         }
-        /* Style expanders */
-        .st-expander {
-            background-color: #2D1B33;
+        /* Style category headers */
+        .st-expander-header {
+            color: #FFC107 !important;
+            font-weight: bold;
+            font-size: 18px;
         }
     </style>
     """,
@@ -66,36 +66,20 @@ st.markdown(
 )
 
 # Display Logo
-st.image("https://theround.in/assets/images/logo.png", width=250)  # Using the online logo
+st.image("/mnt/data/image.png", width=250)  # Use the uploaded image path
 
 st.write("### Welcome to Round - The Global Diner 🍽️")
 st.write("Select your favorite dishes and place an order!")
-selected_items = {}
-# Category Emojis (Optional)
-category_emojis = {
-    "Biryani": "🥘",
-    "Fried Rice": "🍚",
-    "Chinese - Chicken": "🐔",
-    "Beverages": "🥤"
-}
-
-# Streamlit UI
-st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
-st.write("Select items and place your order!")
 
 # User Input
 name = st.text_input("Enter your name:")
-
-# Initialize selected_items dictionary before use
 selected_items = {}
 
-# Display Menu from Google Sheets
+# Display Menu
 for category, items in menu.items():
-    with st.expander(f"{category_emojis.get(category, '')} {category}"):
+    with st.expander(f"🍽️ **{category}**"):
         for item, price in items.items():
-            quantity = st.number_input(
-                f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}"
-            )
+            quantity = st.number_input(f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}")
             if quantity > 0:
                 selected_items[item] = quantity
 
@@ -115,4 +99,3 @@ if st.button("✅ Place Order"):
         st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n💰 Total: ₹ {total_price}")
     else:
         st.warning("⚠️ Please select at least one item to order.")
-
