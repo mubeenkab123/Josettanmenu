@@ -1,6 +1,7 @@
 import streamlit as st
 import gspread
 import pandas as pd
+import os
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
@@ -41,8 +42,12 @@ for _, row in df_menu.iterrows():
 # Streamlit UI
 # Define the correct image path
 image_path = "download.jpg"  # Update with the correct filename if needed
-st.write("Current Directory:", os.getcwd())
-st.write("Files in Directory:", os.listdir(os.getcwd()))
+
+# Check if the image exists before displaying
+if os.path.exists(image_path):
+    st.image(image_path, width=200)
+else:
+    st.error("Error: Logo image not found. Please check the file path.")
 
    
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
