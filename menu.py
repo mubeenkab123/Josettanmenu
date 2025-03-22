@@ -7,11 +7,6 @@ from datetime import datetime
 import json
 
 
-# Load JSON file properly
-json_path = "/mnt/data/restaurento-1127906dfe27.json"  # Update with the correct path
-with open(json_path, "r") as file:
-    creds_dict = json.load(file)
-
 # Authenticate with Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
