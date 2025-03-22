@@ -22,7 +22,7 @@ menu = {}
 for _, row in df_menu.iterrows():
     category = row.get("Category", "").strip()
     item = row.get("Item Name", "").strip()
-    price = row.get("Price", 0)  # Default to 0 if missing
+    price = row.get("Price (₹)", 0)  # Default to 0 if missing
 
     # Convert price to a proper format
     if isinstance(price, str):  
@@ -56,7 +56,7 @@ category_emojis = {
     "Soups": "🍜",
     "Pasta": "🍝",
     "Chinese": "🍜",
-    "Fried Rice: "🍛"
+    "Fried Rice: "🍛",
 }
 # Display Menu
 selected_items = {}
