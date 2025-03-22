@@ -56,7 +56,6 @@ category_emojis = {
     "Soups": "🍜",
     "Pasta": "🍝",
     "Chinese": "🍜",
-    "Fried Rice: "🍛",
 }
 # Display Menu
 selected_items = {}
