@@ -280,8 +280,6 @@ menu = {
 st.title("🍽️ CookDoor Menu")
 st.write("Select items and place your order!")
 
-# User Details (Only name now)
-name = st.text_input("Enter your name:")
 
 # Order Form with Collapsible Categories
 selected_items = {}
@@ -299,6 +297,8 @@ for category, items in menu.items():
             if quantity > 0:
                 selected_items[item] = quantity
 
+# User Details (Only name now)
+name = st.text_input("Enter your name:")
 # Place Order Button
 if st.button("✅ Place Order"):
     if not name:
@@ -321,13 +321,3 @@ if st.button("✅ Place Order"):
     else:
         st.warning("⚠️ Please select at least one item to order.")
 
-# Display Past Orders
-if st.checkbox("📜 View Previous Orders"):
-    st.subheader("Order History")
-    orders = db.get_all_values()
-    if len(orders) > 1:
-        # Updated columns without contact
-        df = pd.DataFrame(orders[1:], columns=["Name", "Time", "Items", "Total Price"])
-        st.dataframe(df)
-    else:
-        st.write("No past orders found.")
