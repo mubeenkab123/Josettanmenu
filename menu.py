@@ -40,7 +40,8 @@ for _, row in df_menu.iterrows():
 
 # Streamlit UI
 # Display the logo at the top
-st.image("download.jpg", width=200)  # Adjust width as needed
+st.image("https://your-logo-url.com/logo.jpg", width=200)
+
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
 st.write("Select items and place your order!")
 
