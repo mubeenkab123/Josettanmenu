@@ -43,8 +43,9 @@ for _, row in df_menu.iterrows():
 image_path = "download.jpg"  # Update with the correct filename if needed
 
 # Check if the image exists before displaying
-if os.path.exists(image_path):
-    st.image(image_path, width=200)
+image_path = os.path.join(os.getcwd(), "download.jpg")
+st.image(image_path, width=200)
+
 else:
     st.error("Error: Logo image not found. Please check the file path.")
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
