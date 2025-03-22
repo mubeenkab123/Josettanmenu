@@ -42,6 +42,22 @@ for _, row in df_menu.iterrows():
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
 st.write("Select items and place your order!")
 
+category_emojis = {
+    "Starters": "🍤",
+    "Main Course": "🍛",
+    "Desserts": "🍰",
+    "Beverages": "🥤",
+    "Biryani": "🍚",
+    "Pizza": "🍕",
+    "Burgers": "🍔",
+    "Sandwiches": "🥪",
+    "Seafood": "🦞",
+    "Salads": "🥗",
+    "Soups": "🍜",
+    "Pasta": "🍝",
+    "Chinese": "🍜",
+    "Fried Rice: "🍛"
+}
 # Display Menu
 selected_items = {}
 for category, items in menu.items():
