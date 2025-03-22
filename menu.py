@@ -15,8 +15,7 @@ menu_sheet = client.open("menudata").worksheet("menu_data")
 menu_data = menu_sheet.get_all_records()
 df_menu = pd.DataFrame(menu_data)
 
-# Debugging: Print column names to check formatting issues
-st.write("🔍 Column Names:", df_menu.columns.tolist())
+
 
 # Ensure column names are clean (remove spaces, avoid KeyErrors)
 df_menu.columns = df_menu.columns.str.strip()
