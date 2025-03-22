@@ -15,9 +15,11 @@ menu_sheet = client.open("menudata").worksheet("menu_data")
 menu_data = menu_sheet.get_all_records()
 df_menu = pd.DataFrame(menu_data)
 
+# Debugging: Show column names and first rows
+st.write("🔍 Column Names:", df_menu.columns.tolist())
+st.write("🔍 First few rows of menu data:", df_menu.head())
 
-
-# Ensure column names are clean (remove spaces, avoid KeyErrors)
+# Ensure column names are clean (remove spaces)
 df_menu.columns = df_menu.columns.str.strip()
 
 # Convert DataFrame to Menu Dictionary
@@ -25,42 +27,42 @@ menu = {}
 for _, row in df_menu.iterrows():
     category = row.get("Category", "").strip()
     item = row.get("Item Name", "").strip()
-    price = row.get("Price", 0)  # Default price to 0 if missing
-    available = row.get("Available", "No").strip()
+    price = row.get("Price", 0)  # Default to 0 if missing
+
+    # Convert price to a proper format
+    if isinstance(price, str):  
+        price = price.strip()  
+        price = price.replace("₹", "").replace(",", "")  # Remove ₹ symbols and commas
+        price = float(price) if price.isnumeric() else "Not Available"
+
+    available = row.get("Available", "").strip().lower()
 
     if category and item:  # Ensure valid category and item
         if category not in menu:
             menu[category] = {}
-        if available.lower() == "yes":
+        if available in ["yes", "y"]:  # Allow different yes formats
             menu[category][item] = price  
-
-# Category Emojis (Optional)
-category_emojis = {
-    "Biryani": "🥘",
-    "Fried Rice": "🍚",
-    "Chinese - Chicken": "🐔",
-    "Beverages": "🥤"
-}
 
 # Streamlit UI
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
 st.write("Select items and place your order!")
 
-# User Input
-name = st.text_input("Enter your name:")
-
-# Initialize selected_items dictionary before use
+# Display Menu
 selected_items = {}
-
-# Display Menu from Google Sheets
 for category, items in menu.items():
-    with st.expander(f"{category_emojis.get(category, '')} {category}"):
+    with st.expander(f"{category}"):
         for item, price in items.items():
+            # Show price correctly in UI
+            st.write(f"{item} - ₹ {price}" if isinstance(price, (int, float)) else f"{item} - Price Not Available")
+            
             quantity = st.number_input(
-                f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}"
+                f"{item} (₹ {price})" if isinstance(price, (int, float)) else f"{item} (Price Not Available)", 
+                min_value=0, max_value=10, step=1, key=f"{category}_{item}"
             )
             if quantity > 0:
                 selected_items[item] = quantity
+
+
 
 # Order Processing
 if st.button("✅ Place Order"):
