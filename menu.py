@@ -10,81 +10,97 @@ creds_dict = dict(st.secrets["gcp_service_account"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
-# Open Google Sheets
-menu_sheet = client.open_by_key("1ILbYNRM-UWth_wm_X48TkzUEyvDT92bcCggVI6COUKg").worksheet("menu_data")    
+# Open Google Sheets (menudata file → menu_data sheet)
+menu_sheet = client.open("menudata").worksheet("menu_data")    
 menu_data = menu_sheet.get_all_records()
 df_menu = pd.DataFrame(menu_data)
+
+# Ensure column names are clean (remove spaces)
+df_menu.columns = df_menu.columns.str.strip()
 
 # Convert DataFrame to Menu Dictionary
 menu = {}
 for _, row in df_menu.iterrows():
-    category = row["Category"]
-    item = row["Item Name"]
-    price = row["Price"]
-    available = row["Available"]
+    category = row.get("Category", "").strip()
+    item = row.get("Item Name", "").strip()
+    price = row.get("Price", "Not Available")
+    available = row.get("Available", "").strip().lower()
 
-    if category not in menu:
-        menu[category] = {}
+    if category and item:
+        if category not in menu:
+            menu[category] = {}
+        if available in ["yes", "y"]:
+            menu[category][item] = price  
 
-    if available.lower() == "yes":
-        menu[category][item] = price  
-
-# Streamlit UI Custom Styling
-st.markdown(
-    """
+# Custom CSS for Round - The Global Diner Styling
+st.markdown("""
     <style>
-        /* Set background color */
-        .stApp {
-            background-color: #1A0E1E; /* Dark Purple from logo */
-            color: white;
-        }
-        /* Style buttons */
-        div.stButton > button {
-            background-color: #FFC107; /* Yellow */
-            color: black;
-            border-radius: 8px;
-            padding: 10px;
-            font-weight: bold;
-        }
-        /* Style text input */
-        input[type="text"] {
-            background-color: #333;
-            color: white;
-            border: 2px solid #FFC107;
-            padding: 8px;
-            font-size: 16px;
-        }
-        /* Style category headers */
-        .st-expander-header {
-            color: #FFC107 !important;
-            font-weight: bold;
-            font-size: 18px;
-        }
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Merriweather&display=swap');
+    
+    body {
+        background-color: #FFFFFF;
+        color: #000000;
+        font-family: 'Merriweather', serif;
+    }
+    .header {
+        background-color: #002060;
+        padding: 15px;
+        text-align: center;
+        color: #FFD700;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 30px;
+        border-radius: 10px;
+    }
+    .menu-section {
+        margin: 20px 0;
+        padding: 10px;
+        border-left: 5px solid #002060;
+    }
+    .menu-item {
+        border-bottom: 1px solid #DDD;
+        padding: 10px 0;
+        font-size: 18px;
+    }
+    .menu-item h3 {
+        color: #002060;
+    }
+    .menu-item p {
+        color: #555;
+    }
+    .order-button {
+        background-color: #FFD700;
+        color: #002060;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+    }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+    ", unsafe_allow_html=True)
 
-# Display Logo
-st.image("/mnt/data/image.png", width=250)  # Use the uploaded image path
+# Header
+st.markdown('<div class="header">Round - The Global Diner Thrissur</div>', unsafe_allow_html=True)
 
-st.write("### Welcome to Round - The Global Diner 🍽️")
-st.write("Select your favorite dishes and place an order!")
-
-# User Input
-name = st.text_input("Enter your name:")
+# Menu Display
+st.write("## Explore Our Menu")
 selected_items = {}
 
-# Display Menu
 for category, items in menu.items():
-    with st.expander(f"🍽️ **{category}**"):
-        for item, price in items.items():
+    st.markdown(f"<div class='menu-section'><h2>{category}</h2></div>", unsafe_allow_html=True)
+    for item, price in items.items():
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.markdown(f"<div class='menu-item'><h3>{item}</h3></div>", unsafe_allow_html=True)
+        with col2:
             quantity = st.number_input(f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}")
             if quantity > 0:
                 selected_items[item] = quantity
 
+# User Input
+name = st.text_input("Enter your name:")
+
 # Order Processing
-if st.button("✅ Place Order"):
+if st.button("✅ Place Order", key="order_button"):
     if not name:
         st.warning("⚠️ Please enter your name.")
     elif selected_items:
