@@ -11,7 +11,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 # Open Google Sheets (Replace "menu_data" with your actual sheet name)
-menu_sheet = client.open("menu_data").sheet1  
+menu_sheet = client.open("menudata").worksheet("menu_data")    
 menu_data = menu_sheet.get_all_records()
 df_menu = pd.DataFrame(menu_data)
 
