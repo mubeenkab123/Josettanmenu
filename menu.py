@@ -41,13 +41,9 @@ for _, row in df_menu.iterrows():
 
 # Streamlit UI
 # Define the correct image path
-image_path = r"C:\Users\USER\Desktop\download.jpg"  # Use raw string (r"") to avoid path issues
+image_url = "https://raw.githubusercontent.com/mubeenkab123/Hotel-menu/refs/heads/main/download.jpg"
 
-if os.path.exists(image_path):
-    st.image(image_path, width=200)
-else:
-    st.error(f"Error: Logo image not found at {image_path}. Please check the file path.")
-
+st.image(image_url, width=200)  # Display the image in Streamlit
    
 st.title("🍽️ Hotel Menu (Dynamic from Google Sheets)")
 st.write("Select items and place your order!")
