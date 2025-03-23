@@ -25,6 +25,15 @@ hide_elements = """
     </script>
 """
 st.markdown(hide_elements, unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    [data-testid="stStatusWidget"] {position: absolute; bottom: -100px; visibility: hidden;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
 
 # Google Sheets Authentication
