@@ -7,21 +7,24 @@ from datetime import datetime
 
 import streamlit as st
 
-import streamlit as st
-
 # Hide Streamlit elements
 st.set_page_config(page_title="Menu", page_icon="🍽️", layout="centered")
 
-hide_streamlit_style = """
+hide_elements = """
     <style>
     #MainMenu {visibility: hidden;}  /* Hide the menu */
     header {visibility: hidden;}    /* Hide the top-right icons */
-    footer {visibility: hidden;}    /* Hide the footer */
-    [data-testid="stStatusWidget"] {display: none !important;} /* Hide 'Manage app' */
+    footer {visibility: hidden;}    /* Hide the Streamlit footer */
     </style>
+    <script>
+    // Hide the "Manage App" button
+    setInterval(function() {
+        var elements = document.querySelectorAll('[data-testid="stStatusWidget"]');
+        elements.forEach(el => el.style.display = 'none');
+    }, 100);
+    </script>
 """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
+st.markdown(hide_elements, unsafe_allow_html=True)
 
 
 # Google Sheets Authentication
