@@ -5,14 +5,20 @@ import os
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
-# Hide Streamlit's default menu (including "GitHub" option)
+import streamlit as st
+
+# Hide Streamlit's default menu (including the GitHub button)
 st.set_page_config(page_title="Menu", page_icon="🍽️", layout="centered")
-hide_menu_style = """
+
+hide_streamlit_style = """
     <style>
-    #MainMenu {visibility: hidden;}
+    #MainMenu {visibility: hidden;}  /* Hide the hamburger menu */
+    header {visibility: hidden;}    /* Hide the top-right menu */
+    footer {visibility: hidden;}    /* Hide the Streamlit footer */
     </style>
 """
-st.markdown(hide_menu_style, unsafe_allow_html=True)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 
 # Google Sheets Authentication
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
