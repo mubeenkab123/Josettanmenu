@@ -7,17 +7,21 @@ from datetime import datetime
 
 import streamlit as st
 
-# Hide Streamlit's default menu (including the GitHub button)
+import streamlit as st
+
+# Hide Streamlit elements
 st.set_page_config(page_title="Menu", page_icon="🍽️", layout="centered")
 
 hide_streamlit_style = """
     <style>
-    #MainMenu {visibility: hidden;}  /* Hide the hamburger menu */
-    header {visibility: hidden;}    /* Hide the top-right menu */
-    footer {visibility: hidden;}    /* Hide the Streamlit footer */
+    #MainMenu {visibility: hidden;}  /* Hide the menu */
+    header {visibility: hidden;}    /* Hide the top-right icons */
+    footer {visibility: hidden;}    /* Hide the footer */
+    [data-testid="stStatusWidget"] {display: none !important;} /* Hide 'Manage app' */
     </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 
 
 # Google Sheets Authentication
