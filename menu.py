@@ -5,6 +5,15 @@ import os
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
+# Hide Streamlit's default menu (including "GitHub" option)
+st.set_page_config(page_title="Menu", page_icon="🍽️", layout="centered")
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
 # Google Sheets Authentication
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds_dict = dict(st.secrets["gcp_service_account"])
