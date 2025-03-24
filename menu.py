@@ -72,7 +72,7 @@ for _, row in df_menu.iterrows():
 
 # Streamlit UI
 # Define the correct image path
-image_url = "https://raw.githubusercontent.com/mubeenkab123/Hotel-menu/refs/heads/main/download.jpg"
+image_url = "https://github.com/mubeenkab123/Josettanmenu/blob/main/download%20(1).jpg"
 
 st.image(image_url, width=200)  # Display the image in Streamlit
    
