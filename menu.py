@@ -109,6 +109,8 @@ for category, items in menu.items():
 # Add Name and Phone Number Input Fields
 name = st.text_input("Enter your name:")
 phone = st.text_input("Enter your phone number:", max_chars=10, help="Enter a 10-digit phone number")
+# Add Table Number Input Field
+table_number = st.text_input("Enter your table number:", help="Enter your assigned table number")
 
 # Ensure the input fields are styled properly
 st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_allow_html=True)
@@ -119,6 +121,8 @@ if st.button("✅ Place Order"):
         st.warning("⚠️ Please enter your name.")
     elif not phone or not phone.isdigit() or len(phone) != 10:
         st.warning("⚠️ Please enter a valid 10-digit phone number.")
+    elif not table_number.strip():
+        st.warning("⚠️ Please enter your table number.")
     elif selected_items:
         total_price = sum(menu[cat][item] * qty for cat in menu for item, qty in selected_items.items() if item in menu[cat])
         order_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -126,9 +130,9 @@ if st.button("✅ Place Order"):
 
         # Save order to Google Sheets
         db = client.open("RestaurantOrders").sheet1
-        db.append_row([name, phone, order_time, order_str, total_price])
+        db.append_row([name, phone, table_number, order_time, order_str, total_price])
 
-        st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n📞 Phone: {phone}\n💰 Total: ₹ {total_price}")
+        st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n📞 Phone: {phone}\n🪑 Table: {table_number}\n💰 Total: ₹ {total_price}")
     else:
         st.warning("⚠️ Please select at least one item to order.")
 
