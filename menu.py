@@ -71,7 +71,7 @@ for _, row in df_menu.iterrows():
             menu[category][item] = price  
 
 # Streamlit UI
-image_url = "https://raw.githubusercontent.com/mubeenkab123/Josettanmenu/main/download%20(1).jpg"
+image_url = "https://raw.githubusercontent.com/mubeenkab123/Josettanmenu/main/download (1).jpg"
 
 st.image(image_url, width=225)  # Display the image in Streamlit
 
