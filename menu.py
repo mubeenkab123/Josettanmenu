@@ -170,3 +170,4 @@ if st.button("✅ Place Order"):
         # Clear selected items after order is placed
         st.session_state.selected_items = {}
 
+
